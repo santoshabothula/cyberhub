@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: sov-cyberhub
+
+logging:
+  pattern:
+    level: "%5p [correlationId=%X{correlationId:-}]"
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+    operations-sorter: method
+    tags-sorter: alpha
+    display-request-duration: true
+    filter: true
+
+cyberwrite:
+  insurers:
+    client:
+      baseUrl: https://api-test.cyberwrite.com/v2.0.8
+      key: 353HQ3RIfy1av5fVbgknq5CWuAcrGhGb9mbWIhip
+      insurer: fc97e035-11f7-4401-93b4-a3b142d286ff

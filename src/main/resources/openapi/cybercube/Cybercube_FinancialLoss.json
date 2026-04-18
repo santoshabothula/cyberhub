@@ -1,0 +1,778 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Financial Loss API Specification",
+    "description": "CyberCube's CyberConnect APIs deliver data and analytics solutions for the cyber insurance ecosystem. Our Financial Loss API helps you to understand risk at a deep level by generating loss metrics from the Financial Loss Model.\n\n# First Steps\nBefore using the Portfolio Scoring API, read these short guides to understand the optimal workflows and other key details:\n\n- [Export a Report](/financial-loss-apis/exporting-a-report)\n- [General Error Codes](/api-management/api_user-general-error-codes?root=418)\n- [Headers & Rate Limits](/api-management/headers-and-rate-?root=418)\n- [Supported SIC-4 Codes](/financial-loss-apis/supported-sic-4-codes)\n\n\n# Using This Swagger API Document\nUse this Swagger API document to test your calls and generate Curl commands, request URLs, and server responses:\n1. Click the **green Authorize** button, enter your API key, and click **Authorize**.\n2. Expand any of the endpoint sections and click **Try it Out**.\n3. If necessary, enter any IDs or other parameter values to make the call.\n4. Click **Execute**.\n5. View your results.\n\n# Authentication\nYou must successfully authenticate to access and use our APIs. To authenticate, use the authentication key sent to you from our team. \n\nSee [Access Your API Keys](/api-authentication-and-security/read-only-api-users?root=169) for more information.\n\n# Legal Disclaimer \n\n  This document is CyberCube Analytics Inc.'s proprietary and confidential information and may not be disclosed to third parties without CyberCube’s prior written consent. This document is provided to you strictly and solely for your internal business purposes only and does not constitute actuarial, tax, legal or other professional advice. Whilst all reasonable care has been taken in the preparation of this document including in ensuring the accuracy of its content, this document is provided on an \"as is\" basis with no warranties or representations whatsoever. No liability is accepted by CyberCube and its affiliates for any loss or damage suffered as a result of reliance on any statement or opinion, or for any error or omission, or deficiency contained in this document. You shall be solely responsible and liable for all decisions you make pertaining to the use of the information contained in this document. This document also contains information that is based on third party sources which we believe to be reliable but we make no representation or warranty as to its correctness or accuracy. This document is subject to change from time to time and it is your responsibility for ensuring that you use the most updated version. Nothing herein shall be construed as conferring on you by implication or otherwise any other licence or right to use CyberCube’s intellectual property. All CyberCube's rights are reserved.\n\n# Contact Us",
+    "contact": {
+      "name": "CyberCube IT",
+      "url": "https://www.cybcube.com",
+      "email": "it@cybcube.com"
+    },
+    "version": "v1.0"
+  },
+  "security": [
+    {
+      "Api-Key": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "Search Company",
+      "description": "Find companies in CyberCube's firmographic database."
+    },
+    {
+      "name": "Account Information",
+      "description": "Create and manage accounts."
+    },
+    {
+      "name": "Analysis Management",
+      "description": "Run an analysis."
+    },
+    {
+      "name": "Financial Loss",
+      "description": "Get financial loss metrics."
+    },
+    {
+      "name": "Financial Loss Reports",
+      "description": "Get financial loss reports."
+    }
+  ],
+  "servers": [
+    {
+      "url": "https://api.pm.cybcube.com",
+      "description": "The CyberCube Analytics, Inc. API server."
+    }
+  ],
+  "paths": {
+    "/odap/risk-scoring/v3/accounts/{accountId}/analyses": {
+      "post": {
+        "tags": [
+          "Analysis Management"
+        ],
+        "summary": "Run Financial Loss Analysis",
+        "description": "Run a Financial Loss Analysis using an `accountId`. Use the returned `analysisId` in other endpoints to get financial loss data and reports. \n\n***Note:*** This endpoint does not download the report or show the data. Wait at least **30 seconds** before exporting a report from the analysis.",
+        "operationId": "Run analysis",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "description": "ID of the account to run the analysis on",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "char"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/run-analysis-response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/odap/data/companies/v1/search": {
+      "get": {
+        "tags": [
+          "Search Company"
+        ],
+        "summary": "Find Company",
+        "description": "Search for available companies in our firmographic database. You can search by company name or website:\n\n  - Searches for names and websites are not case-sensitive.\n  - Website prefix (https:// or http://) is not required.\n  - Searches return up to 50 matching company records.",
+        "operationId": "searchCompany",
+        "parameters": [
+          {
+            "name": "query",
+            "description": "Company name or website",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "minimum": 3,
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SearchCompanyDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/odap/risk-scoring/v3/accounts": {
+      "post": {
+        "tags": [
+          "Account Information"
+        ],
+        "summary": "Create Account",
+        "description": "Create a new account. Use the returned `accountId` in other endpoints to identify the account.",
+        "operationId": "Create an account",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/accountv3-request"
+              }
+            }
+          },
+          "required": true,
+          "description": "| Property | Description | Default / Other Accepted Values | Required\n | --- | --- | --- | --- |\n | `countryCode` | Country code for the company location | No default / String| Yes\n | `policyPremium` | Premium for the account (USD) | No default / Number | No\n | `sic4` | Standard Industrial Classification code | No default / See [Supported SIC-4 Codes](/financial-loss-apis/supported-sic-4-codes). | Yes\n | `eil` | Unique code that identifies the company in our Enterprise Intelligence Layer | No default / String| No\n | `companyName` | Company name | No default / String| Yes\n | `attachmentPoint` | Attachment point for the account (USD) | No default / Number | No\n | `recordsCount` | Number of records associated with the account | No default / Integer | No\n | `deductible` | Deductible for the account (USD) | No default / Number | No\n | `limits` | Policy limit for the account (USD) | No default / Number | No\n | `website` | Company website | No default / String | No\n | `participationPercentage` | Participation percentage for the account, expressed as a decimal, such as `0.75`. | No default / Number | No\n | `revenue` | Company revenue (USD) | No default / Number | No\n | `companySize` | Company size | `LARGE` / `MEDIUM`, `SMALL`, `MICRO` | Yes\n | `contractType` | Type of contract. | `Standalone Cyber` / `E&O`, `D&O`, `GL`, `Property`, `Cargo & Marine`, `Kidnap & Ransom`, `Aviation`, `Product Liability`, `Auto Liability`, `Fidelity`, `WC`, `Professional Liability`, `Commercial Crime`, `Other` | No\n \n **Note:** Optional parameters require empty strings or `null` values.\n \n # Coverage Properties\n \n Include or exclude coverages, set sublimit amounts, and set deductible amounts. Configure each nested property with the following values:\n \n  - `include`: `true` / `false`\n  - `sublimitAmount`: Number\n  - `deductibleAmount`: Number\n  - `deductibleType`: `Time` / `Franchise Time`\n  \n  See the table below to set the loss basis type and deductible types for `businessInterruption`, `contingentBusinessInterruption`, and `businessInterruptionLossBasis`.\n \n \n | Property | Description | Default / Other Accepted Values | Required\n | --- | --- | --- | --- |\n | `legalLiability` | Legal liability coverage | Included | No\n | `regulatoryFinesAndPenalties` | Regulatory fines and penalties coverage | Included | No\n | `investigationAndResponse` | Investigation and response coverage | Included | No\n | `dataRestoration` | Data Restoration coverage | Included | No\n | `businessInterruption` | Business interruption coverage | Included; `deductibleType`: `Time` / `Franchise Time` | No\n | `businessInterruptionLossBasis` | Loss basis calculation type for business interruption coverage | `lossBasisType`: `Revenue` / `Profit` | No\n | `contingentBusinessInterruption` | Contingent business interruption coverage | Included; `deductibleType`: `Time` / `Franchise Time` | No\n | `misdirectedPayment` | Misdirected payment coverage | Included | No\n | `extortionPayment` | Extortion payment coverage | Included | No\n \n \n**Note:** Optional parameters require empty strings or `null` values."
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Account"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/odap/risk-scoring/v3/accounts/{accountId}": {
+      "get": {
+        "tags": [
+          "Account Information"
+        ],
+        "summary": "View Account",
+        "description": "View information for an account by using an `accountID`.",
+        "operationId": "Retrieve account information",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "description": "ID of the account to view",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "char"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/accountv3-request"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/odap/risk-scoring/v1/financial-loss/accounts/{accountId}/analyses/{analysisId}/attritional-reports/{type}": {
+      "get": {
+        "tags": [
+          "Financial Loss Reports"
+        ],
+        "summary": "Download Financial Loss by Type Report",
+        "description": "Get a `preSignedUrl` to download a CSV report with financial loss data by type (RFA, baseline) by using an `accountId` and `analysisId`. Keep in mind that your `preSignedUrl` is valid for 5 minutes.\n\nDownload the report with a GET command and the `preSignedUrl`. See [Export a Report](/financial-loss-apis/exporting-a-report)  for example code.\n\n**Note:** Wait at least 30 seconds before exporting a report from an analysis.",
+        "operationId": "Get YLT presigned URL result by type (RFA, BASELINE)",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "description": "ID of the account",
+            "required": true,
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "format": "char"
+            }
+          },
+          {
+            "name": "analysisId",
+            "in": "path",
+            "description": "ID of the analysis",
+            "required": true,
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "format": "char"
+            }
+          },
+          {
+            "name": "type",
+            "in": "path",
+            "description": "Type of attritional loss calculation:\n  - `RISK_ADJUSTED`\n  - `BASELINE`",
+            "required": true,
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "format": "enum - RFA - BASELINE"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/financial-loss-results-ylt"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/odap/risk-scoring/v1/financial-loss/accounts/{accountId}/analyses/{analysisId}/attritional-losses/{type}": {
+      "get": {
+        "tags": [
+          "Financial Loss"
+        ],
+        "summary": "Get Financial Loss by Type",
+        "description": "Use an `accountId` and `analysisId` to get financial loss data by type. Enter `Risk_Adjusted` or `Baseline` to determine the calculation type for the loss metrics:\n  - Expected Loss\n  - Average Frequency\n  - Average Severity\n  - Coefficient of Variation\n  - Standard Deviation\n  - Probability of Attachment\n  - Probability of Exhaustion\n  - Modelled Loss Ratio",
+        "operationId": "Get financial loss by type (Risk Adjusted, Baseline)",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "description": "ID of the account",
+            "required": true,
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "format": "char"
+            }
+          },
+          {
+            "name": "analysisId",
+            "in": "path",
+            "description": "ID of the analysis",
+            "required": true,
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "format": "char"
+            }
+          },
+          {
+            "name": "type",
+            "in": "path",
+            "description": "Type of attritional loss calculation:\n  - `RISK_ADJUSTED`\n  - `BASELINE`",
+            "required": true,
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "format": "enum - RISK_ADJUSTED - BASELINE"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/financial-loss-results"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/odap/risk-scoring/v1/financial-loss/accounts/{accountId}/analyses/{analysisId}/cat-report": {
+      "get": {
+        "tags": [
+          "Financial Loss Reports"
+        ],
+        "summary": "Download CAT Financial Loss Report",
+        "description": "Get a `preSignedUrl` to download a CSV report with CAT financial loss data by using an `accountId` and `analysisId`. Keep in mind that your `preSignedUrl` is valid for 5 minutes.\n\nDownload the report with a GET command and the `preSignedUrl`. See [Export a Report](/financial-loss-apis/exporting-a-report)  for example code.\n\n**Note:** Wait at least 30 seconds before exporting a report from an analysis.",
+        "operationId": "Get CAT YLT presigned URL",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "description": "ID of the account",
+            "required": true,
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "format": "char"
+            }
+          },
+          {
+            "name": "analysisId",
+            "in": "path",
+            "description": "ID of the analysis",
+            "required": true,
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "format": "char"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/financial-loss-results-ylt"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/odap/risk-scoring/v1/financial-loss/accounts/{accountId}/analyses/{analysisId}/cat-losses": {
+      "get": {
+        "tags": [
+          "Financial Loss"
+        ],
+        "summary": "Get CAT Financial Loss",
+        "description": "Use an `accountId` and `analysisId` to get CAT financial loss data for an account:\n  - Expected Loss\n  - Average Frequency\n  - Average Severity\n  - Coefficient of Variation\n  - Standard Deviation\n  - Probability of Attachment\n  - Probability of Exhaustion\n  - Modelled Loss Ratio",
+        "operationId": "Get CAT financial loss",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "description": "ID of the account",
+            "required": true,
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "format": "char"
+            }
+          },
+          {
+            "name": "analysisId",
+            "in": "path",
+            "description": "ID of the analysis",
+            "required": true,
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "format": "char"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/financial-loss-results"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "run-analysis-response": {
+        "type": "object",
+        "properties": {
+          "analysisId": {
+            "type": "string",
+            "example": "someId"
+          }
+        }
+      },
+      "accountv3-request": {
+        "type": "object",
+        "properties": {
+          "eil": {
+            "type": "string",
+            "maxLength": 60,
+            "example": "47e520c773889be3b7d5e72d16d8e727"
+          },
+          "companyName": {
+            "type": "string",
+            "maxLength": 300,
+            "example": "Facebook"
+          },
+          "website": {
+            "type": "string",
+            "example": "facebook.com"
+          },
+          "countryCode": {
+            "type": "string",
+            "maxLength": 2,
+            "example": "US"
+          },
+          "sic4": {
+            "type": "string",
+            "nullable": false,
+            "example": 7375
+          },
+          "revenue": {
+            "type": "number",
+            "example": 55838000000
+          },
+          "companySize": {
+            "type": "string",
+            "example": "LARGE"
+          },
+          "recordsCount": {
+            "type": "number",
+            "format": "int64",
+            "example": 14560
+          },
+          "contractType": {
+            "type": "string",
+            "format": "enum - Standalone Cyber",
+            "example": "Standalone Cyber"
+          },
+          "policyPremium": {
+            "type": "number",
+            "format": "int64",
+            "example": 2300000
+          },
+          "limits": {
+            "type": "number",
+            "format": "int64",
+            "example": 100000000
+          },
+          "deductible": {
+            "type": "number",
+            "format": "int64",
+            "example": 100000
+          },
+          "attachmentPoint": {
+            "type": "number",
+            "format": "int64",
+            "example": 10000
+          },
+          "participationPercentage": {
+            "type": "number",
+            "format": "double",
+            "example": 0.75
+          },
+          "contingentBusinessInterruption": {
+            "type": "object",
+            "properties": {
+              "include": {
+                "type": "boolean",
+                "example": true
+              },
+              "sublimitAmount": {
+                "type": "number",
+                "format": "int64",
+                "example": 50000
+              },
+              "deductibleAmount": {
+                "type": "number",
+                "format": "int64",
+                "example": 10000
+              },
+              "deductibleType": {
+                "type": "string",
+                "format": "enum - Time - Franchise_Time",
+                "example": "Time"
+              }
+            }
+          },
+          "businessInterruption": {
+            "type": "object",
+            "properties": {
+              "include": {
+                "type": "boolean",
+                "example": true
+              },
+              "sublimitAmount": {
+                "type": "number",
+                "format": "int64",
+                "example": 40000
+              },
+              "deductibleAmount": {
+                "type": "number",
+                "format": "int64",
+                "example": 10000
+              },
+              "deductibleType": {
+                "type": "string",
+                "format": "enum - Time - Franchise_Time",
+                "example": "Time"
+              }
+            }
+          },
+          "misdirectedPayment": {
+            "type": "object",
+            "properties": {
+              "include": {
+                "type": "boolean"
+              },
+              "sublimitAmount": {
+                "type": "number",
+                "format": "int64",
+                "example": 50000
+              },
+              "deductibleAmount": {
+                "type": "number",
+                "format": "int64",
+                "example": 10000
+              }
+            }
+          },
+          "extortionPayment": {
+            "type": "object",
+            "properties": {
+              "include": {
+                "type": "boolean"
+              },
+              "sublimitAmount": {
+                "type": "number",
+                "format": "int64",
+                "example": 50000
+              },
+              "deductibleAmount": {
+                "type": "number",
+                "format": "int64",
+                "example": 10000
+              }
+            }
+          },
+          "regulatoryFinesAndPenalties": {
+            "type": "object",
+            "properties": {
+              "include": {
+                "type": "boolean",
+                "example": true
+              },
+              "sublimitAmount": {
+                "type": "number",
+                "format": "int64",
+                "example": 25000
+              },
+              "deductibleAmount": {
+                "type": "number",
+                "format": "int64",
+                "example": 10000
+              }
+            }
+          },
+          "legalLiability": {
+            "type": "object",
+            "properties": {
+              "include": {
+                "type": "boolean",
+                "example": true
+              },
+              "sublimitAmount": {
+                "type": "number",
+                "format": "int64",
+                "example": 40000
+              },
+              "deductibleAmount": {
+                "type": "number",
+                "format": "int64",
+                "example": 10000
+              }
+            }
+          },
+          "dataRestoration": {
+            "type": "object",
+            "properties": {
+              "include": {
+                "type": "boolean",
+                "example": true
+              },
+              "sublimitAmount": {
+                "type": "number",
+                "format": "int64",
+                "example": 20000
+              },
+              "deductibleAmount": {
+                "type": "number",
+                "format": "int64",
+                "example": 10000
+              }
+            }
+          },
+          "businessInterruptionLossBasis": {
+            "type": "object",
+            "properties": {
+              "include": {
+                "type": "boolean",
+                "example": true
+              },
+              "lossBasisType": {
+                "type": "string",
+                "format": "enum - Revenue - Profit",
+                "example": "Revenue"
+              },
+              "lossBasisAmount": {
+                "type": "number",
+                "format": "int64",
+                "example": 10000
+              }
+            }
+          },
+          "investigationAndResponse": {
+            "type": "object",
+            "properties": {
+              "include": {
+                "type": "boolean",
+                "example": true
+              },
+              "sublimitAmount": {
+                "type": "number",
+                "format": "int64",
+                "example": 60000
+              },
+              "deductibleAmount": {
+                "type": "number",
+                "format": "int64",
+                "example": 10000
+              }
+            }
+          }
+        }
+      },
+      "financial-loss-results": {
+        "type": "object",
+        "properties": {
+          "expectedLoss": {
+            "type": "number",
+            "format": "double",
+            "example": 3138642
+          },
+          "averageFrequency": {
+            "type": "number",
+            "format": "double",
+            "example": 0.102
+          },
+          "averageSeverity": {
+            "type": "number",
+            "format": "double",
+            "example": 30771000
+          },
+          "coefficientOfVariation": {
+            "type": "number",
+            "format": "double",
+            "example": 12.5
+          },
+          "standardDeviation": {
+            "type": "number",
+            "format": "double",
+            "example": 39233025
+          },
+          "probabilityOfAttachment": {
+            "type": "number",
+            "format": "double",
+            "example": 0.096
+          },
+          "probabilityOfExhaustion": {
+            "type": "number",
+            "format": "double",
+            "example": 0.089
+          },
+          "modelledLossRatio": {
+            "type": "number",
+            "format": "double",
+            "example": 0.75
+          }
+        }
+      },
+      "financial-loss-results-ylt": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "default": "IN_PROGRESS",
+            "format": "enum - FINISH - IN_PROGRESS - TIMEOUT"
+          },
+          "presignedUrl": {
+            "type": "string",
+            "example": "someUrl"
+          }
+        }
+      },
+      "SearchCompanyDto": {
+        "required": [
+          "companyName",
+          "eil",
+          "sic4"
+        ],
+        "type": "object",
+        "properties": {
+          "eil": {
+            "type": "string"
+          },
+          "companyName": {
+            "type": "string"
+          },
+          "companySize": {
+            "type": "string",
+            "enum": [
+              "LARGE",
+              "MEDIUM",
+              "MICRO",
+              "SMALL"
+            ]
+          },
+          "countryCode": {
+            "type": "string"
+          },
+          "sic4": {
+            "type": "string"
+          },
+          "revenue": {
+            "type": "number"
+          },
+          "website": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "eil": "47e520c773889be3b7d5e72d16d8e727",
+          "companyName": "Facebook Inc",
+          "companySize": "LARGE",
+          "countryCode": "US",
+          "sic4": "7375",
+          "revenue": 85965000000,
+          "website": "facebook.com"
+        }
+      },
+      "Account": {
+        "type": "object",
+        "properties": {
+          "accountId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "Api-Key": {
+        "type": "apiKey",
+        "description": "API Key used for authentication",
+        "name": "x-api-key",
+        "in": "header"
+      }
+    }
+  }
+}
