@@ -106,24 +106,106 @@
 				<version>7.5.0</version>
 				<executions>
 					<execution>
-						<goals>
-							<goal>generate</goal>
-						</goals>
+						<id>cyberwrite-insurers-apis</id>
+						<phase>generate-sources</phase>
+						<goals><goal>generate</goal></goals>
 						<configuration>
 							<inputSpec>${project.basedir}/src/main/resources/openapi/cyberwrite/apis.yml</inputSpec>
 							<generatorName>spring</generatorName>
 							<output>${project.build.directory}/generated-sources</output>
+							<templateDirectory>${project.basedir}/src/main/resources/openapi/templates</templateDirectory>
 							<skipValidateSpec>true</skipValidateSpec>
-
 							<configOptions>
-								<useJakartaEe>true</useJakartaEe>
 								<useSpringBoot3>true</useSpringBoot3>
+								<useJakartaEe>true</useJakartaEe>
 								<interfaceOnly>true</interfaceOnly>
-								<openApiNullable>false</openApiNullable>
-								<useSwaggerAnnotations>false</useSwaggerAnnotations>
-								<apiPackage>com.sg.cyberhub.api.cyberwrite</apiPackage>
-								<modelPackage>com.sg.cyberhub.model.cyberwrite</modelPackage>
+								<useLombok>true</useLombok>
+								<useJackson>true</useJackson>
+								<serializationLibrary>jackson</serializationLibrary>
+								<modelPackage>com.sg.cyberhub.model.cyberwrite.insurers</modelPackage>
 							</configOptions>
+						</configuration>
+					</execution>
+
+					<execution>
+						<id>Cybercube-FinancialLoss-apis</id>
+						<phase>generate-sources</phase>
+						<goals><goal>generate</goal></goals>
+						<configuration>
+							<inputSpec>${project.basedir}/src/main/resources/openapi/cybercube/Cybercube_FinancialLoss.json</inputSpec>
+							<generatorName>spring</generatorName>
+							<output>${project.build.directory}/generated-sources</output>
+							<templateDirectory>${project.basedir}/src/main/resources/openapi/templates</templateDirectory>
+							<skipValidateSpec>true</skipValidateSpec>
+							<configOptions>
+								<useSpringBoot3>true</useSpringBoot3>
+								<useJakartaEe>true</useJakartaEe>
+								<interfaceOnly>true</interfaceOnly>
+								<useLombok>true</useLombok>
+								<useJackson>true</useJackson>
+								<serializationLibrary>jackson</serializationLibrary>
+								<modelPackage>com.sg.cyberhub.model.cybercube.fl</modelPackage>
+							</configOptions>
+						</configuration>
+					</execution>
+
+					<execution>
+						<id>Cybercube-Risk-apis</id>
+						<phase>generate-sources</phase>
+						<goals><goal>generate</goal></goals>
+						<configuration>
+							<inputSpec>${project.basedir}/src/main/resources/openapi/cybercube/Cybercube_Risk.json</inputSpec>
+							<generatorName>spring</generatorName>
+							<output>${project.build.directory}/generated-sources</output>
+							<templateDirectory>${project.basedir}/src/main/resources/openapi/templates</templateDirectory>
+							<skipValidateSpec>true</skipValidateSpec>
+							<configOptions>
+								<useSpringBoot3>true</useSpringBoot3>
+								<useJakartaEe>true</useJakartaEe>
+								<interfaceOnly>true</interfaceOnly>
+								<useLombok>true</useLombok>
+								<useJackson>true</useJackson>
+								<serializationLibrary>jackson</serializationLibrary>
+								<modelPackage>com.sg.cyberhub.model.cybercube.risk</modelPackage>
+							</configOptions>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>3.3.0</version>
+				<executions>
+					<execution>
+						<id>post-process-dtos</id>
+						<phase>process-classes</phase>
+						<goals><goal>java</goal></goals>
+						<configuration>
+							<includeProjectDependencies>true</includeProjectDependencies>
+							<mainClass>com.sg.cyberhub.config.DtoPostProcessor</mainClass>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-clean-plugin</artifactId>
+				<version>3.3.2</version>
+				<executions>
+					<execution>
+						<id>remove-generated-files</id>
+						<phase>generate-sources</phase>
+						<goals><goal>clean</goal></goals>
+						<configuration>
+							<excludeDefaultDirectories>true</excludeDefaultDirectories>
+							<filesets>
+								<fileset>
+									<directory>${project.build.directory}/generated-sources/src/main/java/org</directory>
+								</fileset>
+							</filesets>
 						</configuration>
 					</execution>
 				</executions>

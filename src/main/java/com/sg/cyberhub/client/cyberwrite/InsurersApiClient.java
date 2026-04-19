@@ -1,6 +1,6 @@
-package com.sg.cyberhub.cyberwrite.client;
+package com.sg.cyberhub.client.cyberwrite;
 
-import com.sg.cyberhub.model.cyberwrite.*;
+import com.sg.cyberhub.model.cyberwrite.insurers.*;
 import org.springframework.core.io.Resource;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;

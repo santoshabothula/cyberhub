@@ -1,0 +1,4 @@
+{
+  "InsurerSettingsSchema": ["countries"],
+  "InsuredDataSchema": ["website"]
+}

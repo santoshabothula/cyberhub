@@ -23,3 +23,10 @@ cyberwrite:
       baseUrl: https://api-test.cyberwrite.com/v2.0.8
       key: 353HQ3RIfy1av5fVbgknq5CWuAcrGhGb9mbWIhip
       insurer: fc97e035-11f7-4401-93b4-a3b142d286ff
+
+cybercube:
+  odap:
+    client:
+      baseUrl: https://api.pm.cybcube.com
+      key: 6WUpjmGY0ktKy4KnCoZddmhfd7Vu7lI/yhSigQ6gylr8mfVSPGl47SofoBfOOePd/7pH2cq0wRW99EIU7sT3HA==
+

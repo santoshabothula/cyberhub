@@ -1,7 +1,7 @@
-package com.sg.cyberhub.cyberwrite.service;
+package com.sg.cyberhub.service.cyberwrite;
 
-import com.sg.cyberhub.cyberwrite.client.InsurersApiClient;
-import com.sg.cyberhub.model.cyberwrite.*;
+import com.sg.cyberhub.client.cyberwrite.InsurersApiClient;
+import com.sg.cyberhub.model.cyberwrite.insurers.*;
 import lombok.AllArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;

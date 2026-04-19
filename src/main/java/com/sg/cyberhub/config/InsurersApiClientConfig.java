@@ -1,6 +1,6 @@
-package com.sg.cyberhub.cyberwrite.config;
+package com.sg.cyberhub.config;
 
-import com.sg.cyberhub.cyberwrite.client.InsurersApiClient;
+import com.sg.cyberhub.client.cyberwrite.InsurersApiClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
