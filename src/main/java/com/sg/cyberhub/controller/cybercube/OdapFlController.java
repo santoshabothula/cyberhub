@@ -8,6 +8,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/v1/cybercube/odap/fl")
@@ -68,7 +70,7 @@ public class OdapFlController {
     @GetMapping("/search")
     @ApiResponse(responseCode = "200", description = "Ok")
     @Operation(summary = "Find Company", description = "Search for available companies in our firmographic database. You can search by company name or website:    - Searches for names and websites are not case-sensitive.   - Website prefix (https:// or http://) is not required.   - Searches return up to 50 matching company records.")
-    public Accountv3Request searchCompany(@RequestParam String query) {
+    public List<SearchCompanyDto> searchCompany(@RequestParam String query) {
         return service.searchCompany(query);
     }
 }

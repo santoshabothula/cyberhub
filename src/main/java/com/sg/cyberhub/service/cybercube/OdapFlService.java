@@ -5,6 +5,8 @@ import com.sg.cyberhub.model.cybercube.fl.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class OdapFlService implements OdapApiFlClient {
@@ -47,7 +49,7 @@ public class OdapFlService implements OdapApiFlClient {
     }
 
     @Override
-    public Accountv3Request searchCompany(String query) {
+    public List<SearchCompanyDto> searchCompany(String query) {
         return client.searchCompany(query);
     }
 }

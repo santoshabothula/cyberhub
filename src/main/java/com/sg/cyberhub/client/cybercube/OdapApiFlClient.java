@@ -8,6 +8,8 @@ import org.springframework.web.service.annotation.GetExchange;
 import org.springframework.web.service.annotation.HttpExchange;
 import org.springframework.web.service.annotation.PostExchange;
 
+import java.util.List;
+
 @HttpExchange(
         accept = "application/json",
         contentType = "application/json"
@@ -40,5 +42,5 @@ public interface OdapApiFlClient {
     RunAnalysisResponse runAnalysis(@PathVariable String accountId);
 
     @GetExchange("/data/companies/v1/search")
-    Accountv3Request searchCompany(@RequestParam String query);
+    List<SearchCompanyDto> searchCompany(@RequestParam String query);
 }
