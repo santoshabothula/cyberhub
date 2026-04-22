@@ -1,15 +1,15 @@
 package com.sg.cyberhub.config;
 
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-@Slf4j
 @Aspect
 @Component
 public class LoggingAspectConfig {
@@ -19,6 +19,9 @@ public class LoggingAspectConfig {
 
         String method = joinPoint.getSignature().toShortString();
         long start = System.currentTimeMillis();
+
+        Class<?> clazz = joinPoint.getTarget().getClass();
+        Logger log = LoggerFactory.getLogger(clazz);
 
         ServletRequestAttributes attrs = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attrs.getRequest();
