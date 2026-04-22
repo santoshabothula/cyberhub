@@ -17,6 +17,15 @@ springdoc:
     display-request-duration: true
     filter: true
 
+management:
+  endpoints:
+    health:
+      show-details: always
+    web:
+      base-path: /actuator
+      exposure:
+        include: "*"
+
 cyberwrite:
   insurers:
     client:
