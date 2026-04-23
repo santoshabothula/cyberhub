@@ -1,6 +1,13 @@
 spring:
   application:
     name: sov-cyberhub
+  datasource:
+    url: jdbc:sqlite:cyber_hub_logs.db
+    driver-class-name: org.sqlite.JDBC
+  jpa:
+    database-platform: org.hibernate.community.dialect.SQLiteDialect
+    hibernate.ddl-auto: update
+    show-sql: false
 
 logging:
   pattern:
