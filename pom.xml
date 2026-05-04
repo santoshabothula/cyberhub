@@ -256,7 +256,7 @@
 								</replaceregexp>
 
 								<replaceregexp match="private\s+Integer\s+"
-											   replace="private Long "
+											   replace="private Number "
 											   flags="g">
 
 									<fileset dir="${project.build.directory}/generated-sources/src/main/java/com/sg/cyberhub/model">

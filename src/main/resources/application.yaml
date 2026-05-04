@@ -8,8 +8,8 @@ spring:
     database-platform: org.hibernate.community.dialect.SQLiteDialect
     hibernate.ddl-auto: update
     show-sql: false
-  jackson:
-    property-naming-strategy: SNAKE_CASE
+#  jackson:
+#    property-naming-strategy: SNAKE_CASE
 
 logging:
   pattern:

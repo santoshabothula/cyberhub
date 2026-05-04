@@ -5,10 +5,12 @@ import com.sg.cyberhub.client.cybercube.OdapRiskApiClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.support.RestClientAdapter;
 import org.springframework.web.service.invoker.HttpServiceProxyFactory;
 
+@Import(ApplicationConfig.class)
 @Configuration
 public class OdapApiClientConfig {
 

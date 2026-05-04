@@ -26,7 +26,60 @@ import java.util.UUID;
 public class {{classname}} {
 
 {{#vars}}
+    {{#required}}
+    {{#isString}}
+    @jakarta.validation.constraints.NotBlank
+    {{/isString}}
+    {{^isString}}
+    @jakarta.validation.constraints.NotNull
+    {{/isString}}
+    {{/required}}
+    {{#isString}}
+    {{#minLength}}
+    @jakarta.validation.constraints.Size(min={{minLength}}{{#maxLength}}, max={{maxLength}}{{/maxLength}})
+    {{/minLength}}
+    {{^minLength}}
+    {{#maxLength}}
+    @jakarta.validation.constraints.Size(max={{maxLength}})
+    {{/maxLength}}
+    {{/minLength}}
+    {{#pattern}}
+    @jakarta.validation.constraints.Pattern(regexp="{{{pattern}}}")
+    {{/pattern}}
+    {{#isEmail}}
+    @jakarta.validation.constraints.Email
+    {{/isEmail}}
+    {{/isString}}
+    {{#isNumber}}
+    {{#minimum}}
+    @jakarta.validation.constraints.DecimalMin(value="{{minimum}}", inclusive=true)
+    {{/minimum}}
+    {{#maximum}}
+    @jakarta.validation.constraints.DecimalMax(value="{{maximum}}", inclusive=true)
+    {{/maximum}}
+    {{/isNumber}}
+    {{#isInteger}}
+    {{#minimum}}
+    @jakarta.validation.constraints.Min({{minimum}})
+    {{/minimum}}
+    {{#maximum}}
+    @jakarta.validation.constraints.Max({{maximum}})
+    {{/maximum}}
+    {{/isInteger}}
+    {{#isArray}}
+    {{#minItems}}
+    @jakarta.validation.constraints.Size(min={{minItems}})
+    {{/minItems}}
+    {{#maxItems}}
+    @jakarta.validation.constraints.Size(max={{maxItems}})
+    {{/maxItems}}
+    {{/isArray}}
+    {{#isModel}}
+    @jakarta.validation.Valid
+    {{/isModel}}
+    @com.fasterxml.jackson.annotation.JsonProperty("{{baseName}}")
     private {{{datatype}}} {{name}};
+
 {{/vars}}
 
 }

@@ -41,12 +41,9 @@ public class DtoPostProcessor {
             if (!rules.containsKey(className)) return;
 
             for (String field : rules.get(className)) {
-
                 // remove field line
-                content = content.replaceAll(
-                        "private\\s+[^;]+\\s+" + field + "\\s*;",
-                        ""
-                );
+                String regex = "\\s*(?:@\\S+(?:\\([^)]*\\))?\\s*)*private\\s+\\S+\\s+" + field + "\\s*;";
+                content = content.replaceAll(regex, "");
             }
 
             Files.writeString(file, content);

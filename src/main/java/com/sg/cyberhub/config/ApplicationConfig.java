@@ -17,7 +17,7 @@ public class ApplicationConfig {
     @Bean
     public ObjectMapper objectMapper() {
         ObjectMapper mapper = new ObjectMapper();
-        mapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
+//        mapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
         mapper.registerModule(new JavaTimeModule());
         mapper.registerModule(new ParameterNamesModule());
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
