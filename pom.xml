@@ -213,6 +213,15 @@
 							<mainClass>com.sg.cyberhub.config.DtoPostProcessor</mainClass>
 						</configuration>
 					</execution>
+					<execution>
+						<id>replace-empty-openapi-classes</id>
+						<phase>process-classes</phase>
+						<goals><goal>java</goal></goals>
+						<configuration>
+							<includeProjectDependencies>true</includeProjectDependencies>
+							<mainClass>com.sg.cyberhub.config.OpenApiEmptyClassProcessor</mainClass>
+						</configuration>
+					</execution>
 				</executions>
 			</plugin>
 
@@ -247,13 +256,37 @@
 						<phase>generate-sources</phase>
 						<configuration>
 							<target>
-								<replaceregexp match="private\s+Answer\s+"
-											   replace="private Object "
-											   flags="g">
-									<fileset dir="${project.build.directory}/generated-sources/src/main/java/com/sg/cyberhub/model">
-										<include name="**/*.java"/>
-									</fileset>
-								</replaceregexp>
+<!--								<replaceregexp match="private\s+Answer\s+"-->
+<!--											   replace="private Object "-->
+<!--											   flags="g">-->
+<!--									<fileset dir="${project.build.directory}/generated-sources/src/main/java/com/sg/cyberhub/model">-->
+<!--										<include name="**/*.java"/>-->
+<!--									</fileset>-->
+<!--								</replaceregexp>-->
+
+<!--								<replaceregexp match="private\s+Host\s+"-->
+<!--											   replace="private Object "-->
+<!--											   flags="g">-->
+<!--									<fileset dir="${project.build.directory}/generated-sources/src/main/java/com/sg/cyberhub/model">-->
+<!--										<include name="**/*.java"/>-->
+<!--									</fileset>-->
+<!--								</replaceregexp>-->
+
+<!--								<replaceregexp match="private\s+IpAddress\s+"-->
+<!--											   replace="private Object "-->
+<!--											   flags="g">-->
+<!--									<fileset dir="${project.build.directory}/generated-sources/src/main/java/com/sg/cyberhub/model">-->
+<!--										<include name="**/*.java"/>-->
+<!--									</fileset>-->
+<!--								</replaceregexp>-->
+
+<!--								<replaceregexp match="private\s+Details\s+"-->
+<!--											   replace="private Object "-->
+<!--											   flags="g">-->
+<!--									<fileset dir="${project.build.directory}/generated-sources/src/main/java/com/sg/cyberhub/model">-->
+<!--										<include name="**/*.java"/>-->
+<!--									</fileset>-->
+<!--								</replaceregexp>-->
 
 								<replaceregexp match="private\s+Integer\s+"
 											   replace="private Number "
