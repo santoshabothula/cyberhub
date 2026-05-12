@@ -1,5 +1,7 @@
 package com.sg.cyberhub.config;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.io.IOException;
 import java.nio.file.*;
 import java.util.*;
@@ -7,6 +9,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
+@Slf4j
 public class OpenApiEmptyClassProcessor {
 
     private static final String MODEL_PATH = "target/generated-sources/src/main/java";
@@ -14,7 +17,7 @@ public class OpenApiEmptyClassProcessor {
     public static void main(String[] args) throws Exception {
         Path root = Paths.get(MODEL_PATH);
         Set<String> emptyClasses = findEmptyClasses(root);
-        System.out.println("Empty classes found: " + emptyClasses);
+        log.info("Empty classes found: " + emptyClasses);
         replaceFieldTypes(root, emptyClasses);
     }
 
