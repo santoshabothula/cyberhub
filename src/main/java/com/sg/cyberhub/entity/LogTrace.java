@@ -1,17 +1,14 @@
 package com.sg.cyberhub.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
 import lombok.Builder;
 import lombok.Data;
 
-@Entity
+//@Entity
 @Data
 @Builder
 public class LogTrace {
-    @Id
-    @GeneratedValue
+//    @Id
+//    @GeneratedValue
     private Long id;
     private String correlationId;
     private String className;

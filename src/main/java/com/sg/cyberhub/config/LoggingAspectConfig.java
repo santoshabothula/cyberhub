@@ -1,6 +1,5 @@
 package com.sg.cyberhub.config;
 
-import com.sg.cyberhub.LogTraceRepository;
 import com.sg.cyberhub.entity.LogTrace;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
@@ -21,7 +20,7 @@ import static com.sg.cyberhub.util.CommonUtil.CORRELATION_ID_MDC_KEY;
 @AllArgsConstructor
 public class LoggingAspectConfig {
 
-    private LogTraceRepository logTraceRepository;
+//    private LogTraceRepository logTraceRepository;
 
     @Around("execution(* com.sg..*Controller.*(..))")
     public Object logExecution(ProceedingJoinPoint joinPoint) throws Throwable {
@@ -53,7 +52,7 @@ public class LoggingAspectConfig {
     }
 
     private void log(String className, String method, Long endTime, String message, String api, String apiMethod) {
-        logTraceRepository.save(
+//        logTraceRepository.save(
                 LogTrace.builder()
                         .correlationId(MDC.get(CORRELATION_ID_MDC_KEY))
                         .className(className)
@@ -62,7 +61,7 @@ public class LoggingAspectConfig {
                         .log(message)
                         .api(api)
                         .apiMethod(apiMethod)
-                        .build()
-        );
+                        .build();
+//        );
     }
 }

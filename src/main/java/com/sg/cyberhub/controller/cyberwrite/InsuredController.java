@@ -58,14 +58,6 @@ public class InsuredController {
         return ResponseEntity.ok(result);
     }
 
-    @PostMapping
-    @Operation(summary = "Create Insured", description = "Create an insured record")
-    @ApiResponse(responseCode = "200", description = "Insured created successfully")
-    public ResponseEntity<InsuredsCreateSchema> createInsured(@RequestBody InsuredSourceSchema request) {
-        InsuredsCreateSchema result = insurersService.createInsured(CommonUtil.generateUUIDAsString(), request);
-        return ResponseEntity.ok(result);
-    }
-
     @PutMapping("/{insured}")
     @Operation(summary = "Update Insured", description = "Update an insured record")
     @ApiResponse(responseCode = "200", description = "Insured updated successfully")
