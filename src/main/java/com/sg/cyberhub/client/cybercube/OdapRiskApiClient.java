@@ -42,10 +42,10 @@ public interface OdapRiskApiClient {
     SecuritySignalsResponseDto getSecuritySignals(
             @PathVariable UUID accountId,
             @PathVariable UUID analysisId,
-            @RequestParam(required = false) ThreatType threatType,
-            @RequestParam(required = false) SignalType signalType,
-            @RequestParam(required = false) SignalImpact signalImpact,
-            @RequestParam(required = false) SignalState signalState
+            @RequestParam(required = false) String threatType,
+            @RequestParam(required = false) String signalType,
+            @RequestParam(required = false) String signalImpact,
+            @RequestParam(required = false) String signalState
     );
 
     @GetExchange("/risk-scoring/v1/security-signals/historical-trends/accounts/{accountId}/analyses/{analysisId}")

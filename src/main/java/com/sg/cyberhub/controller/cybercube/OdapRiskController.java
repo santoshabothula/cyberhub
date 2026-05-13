@@ -73,13 +73,13 @@ public class OdapRiskController {
             @Parameter(description = "Analysis ID", required = true)
             @PathVariable UUID analysisId,
             @Parameter(description = "Threat Type")
-            @RequestParam(required = false) ThreatType threatType,
+            @RequestParam(required = false) String threatType,
             @Parameter(description = "Signal Type")
-            @RequestParam(required = false) SignalType signalType,
+            @RequestParam(required = false) String signalType,
             @Parameter(description = "Signal Impact")
-            @RequestParam(required = false) SignalImpact signalImpact,
+            @RequestParam(required = false) String signalImpact,
             @Parameter(description = "Signal State")
-            @RequestParam(required = false) SignalState signalState
+            @RequestParam(required = false) String signalState
     ) {
         return service.getSecuritySignals(accountId, analysisId, threatType, signalType, signalImpact, signalState);
     }

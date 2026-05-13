@@ -37,10 +37,10 @@ public class OdapRiskService {
     public SecuritySignalsResponseDto getSecuritySignals(
             UUID accountId,
             UUID analysisId,
-            ThreatType threatType,
-            SignalType signalType,
-            SignalImpact signalImpact,
-            SignalState signalState
+            String threatType,
+            String signalType,
+            String signalImpact,
+            String signalState
     ) {
         return client.getSecuritySignals(accountId, analysisId, threatType, signalType, signalImpact, signalState);
     }
