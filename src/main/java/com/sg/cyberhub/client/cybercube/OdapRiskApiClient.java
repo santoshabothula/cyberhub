@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.service.annotation.GetExchange;
 import org.springframework.web.service.annotation.HttpExchange;
 import org.springframework.web.service.annotation.PostExchange;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.UUID;
@@ -18,28 +19,28 @@ import java.util.UUID;
 public interface OdapRiskApiClient {
 
     @PostExchange("/risk-scoring/v3/accounts")
-    AccountIdDto createCompanyV3(@RequestBody CreateAccountV3Dto request);
+    Mono<AccountIdDto> createCompanyV3(@RequestBody CreateAccountV3Dto request);
 
     @GetExchange("/risk-scoring/v3/accounts/{accountId}")
-    CreateAccountV3Dto getCompanyV3(@PathVariable UUID accountId);
+    Mono<CreateAccountV3Dto> getCompanyV3(@PathVariable UUID accountId);
 
     @PostExchange("/risk-scoring/v3/accounts/{accountId}/analyses")
-    AnalysisIdDto runAnalysisLatest(@PathVariable UUID accountId);
+    Mono<AnalysisIdDto> runAnalysisLatest(@PathVariable UUID accountId);
 
     @GetExchange("/risk-scoring/v3/accounts/{accountId}/analyses/{analysisId}/scores")
-    LatestMonthAnalysisDataV3Dto getRiskScoresV3(
+    Mono<LatestMonthAnalysisDataV3Dto> getRiskScoresV3(
             @PathVariable UUID accountId,
             @PathVariable UUID analysisId
     );
 
     @GetExchange("/risk-scoring/v3/accounts/{accountId}/analyses/{analysisId}/full-report")
-    AmAnalysisReportDto downloadReportLatest(
+    Mono<AmAnalysisReportDto> downloadReportLatest(
             @PathVariable UUID accountId,
             @PathVariable UUID analysisId
     );
 
     @GetExchange("/risk-scoring/v1/security-signals/accounts/{accountId}/analyses/{analysisId}")
-    SecuritySignalsResponseDto getSecuritySignals(
+    Mono<SecuritySignalsResponseDto> getSecuritySignals(
             @PathVariable UUID accountId,
             @PathVariable UUID analysisId,
             @RequestParam(required = false) String threatType,
@@ -49,7 +50,7 @@ public interface OdapRiskApiClient {
     );
 
     @GetExchange("/risk-scoring/v1/security-signals/historical-trends/accounts/{accountId}/analyses/{analysisId}")
-    SecuritySignalsHistoricalResponse getHistoricalSignals(
+    Mono<SecuritySignalsHistoricalResponse> getHistoricalSignals(
             @PathVariable UUID accountId,
             @PathVariable UUID analysisId,
             @RequestParam(required = false) String signalName,
@@ -57,5 +58,5 @@ public interface OdapRiskApiClient {
     );
 
     @GetExchange("/data/companies/v1/search")
-    List<SearchCompanyDto> searchCompany(@RequestParam String query);
+    Mono<List<SearchCompanyDto>> searchCompany(@RequestParam String query);
 }

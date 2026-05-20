@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.service.annotation.GetExchange;
 import org.springframework.web.service.annotation.HttpExchange;
 import org.springframework.web.service.annotation.PostExchange;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 
@@ -17,30 +18,30 @@ import java.util.List;
 public interface OdapApiFlClient {
 
     @PostExchange("/risk-scoring/v3/accounts")
-    Account createAnAccount(@RequestBody Accountv3Request request);
+    Mono<Account> createAnAccount(@RequestBody Accountv3Request request);
 
     @GetExchange("/risk-scoring/v1/financial-loss/accounts/{accountId}/analyses/{analysisId}/cat-losses")
-    FinancialLossResults getCATFinancialLoss(@PathVariable String accountId, @PathVariable String analysisId);
+    Mono<FinancialLossResults> getCATFinancialLoss(@PathVariable String accountId, @PathVariable String analysisId);
 
     @GetExchange("/risk-scoring/v1/financial-loss/accounts/{accountId}/analyses/{analysisId}/cat-report")
-    FinancialLossResultsYlt getCATYLTPresignedURL(@PathVariable String accountId, @PathVariable String analysisId);
+    Mono<FinancialLossResultsYlt> getCATYLTPresignedURL(@PathVariable String accountId, @PathVariable String analysisId);
 
     @GetExchange("/risk-scoring/v1/financial-loss/accounts/{accountId}/analyses/{analysisId}/attritional-losses/{type}")
-    FinancialLossResults getFinancialLossByTypeRiskAdjustedBaseline(
+    Mono<FinancialLossResults> getFinancialLossByTypeRiskAdjustedBaseline(
             @PathVariable String accountId, @PathVariable String analysisId, @PathVariable String type
     );
 
     @GetExchange("/risk-scoring/v1/financial-loss/accounts/{accountId}/analyses/{analysisId}/attritional-reports/{type}")
-    FinancialLossResultsYlt getYLTPresignedURLResultByTypeRFABASELINE(
+    Mono<FinancialLossResultsYlt> getYLTPresignedURLResultByTypeRFABASELINE(
             @PathVariable String accountId, @PathVariable String analysisId, @PathVariable String type
     );
 
     @GetExchange("/risk-scoring/v3/accounts/{accountId}")
-    Accountv3Request retrieveAccountInformation(@PathVariable String accountId);
+    Mono<Accountv3Request> retrieveAccountInformation(@PathVariable String accountId);
 
     @PostExchange("/risk-scoring/v3/accounts/{accountId}/analyses")
-    RunAnalysisResponse runAnalysis(@PathVariable String accountId);
+    Mono<RunAnalysisResponse> runAnalysis(@PathVariable String accountId);
 
     @GetExchange("/data/companies/v1/search")
-    List<SearchCompanyDto> searchCompany(@RequestParam String query);
+    Mono<List<SearchCompanyDto>> searchCompany(@RequestParam String query);
 }

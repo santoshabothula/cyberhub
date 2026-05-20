@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.support.RestClientAdapter;
+import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.support.WebClientAdapter;
 import org.springframework.web.service.invoker.HttpServiceProxyFactory;
 
 @Import(ApplicationConfig.class)
@@ -23,16 +25,22 @@ public class InsurersApiClientConfig {
     private String insurer;
 
     @Bean
-    public InsurersApiClient insurerApiClient(RestClient.Builder builder) {
+    public InsurersApiClient insurerApiClient(WebClient webClient) {
 
-        RestClient restClient = builder
+//        RestClient restClient = builder
+//                .baseUrl(formatBaseUrl())
+//                .defaultHeader("Accept", "application/json")
+//                .defaultHeader("x-api-key", apiKey)
+//                .build();
+
+        WebClient customWebClient = webClient.mutate()
                 .baseUrl(formatBaseUrl())
                 .defaultHeader("Accept", "application/json")
                 .defaultHeader("x-api-key", apiKey)
                 .build();
 
         HttpServiceProxyFactory factory = HttpServiceProxyFactory
-                .builderFor(RestClientAdapter.create(restClient))
+                .builderFor(WebClientAdapter.create(customWebClient))
                 .build();
 
         return factory.createClient(InsurersApiClient.class);

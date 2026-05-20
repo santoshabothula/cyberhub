@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.UUID;
@@ -27,7 +28,7 @@ public class OdapRiskController {
 
     @GetMapping("/accounts/{accountId}")
     @Operation(summary = "Get Account", description = "Retrieve account details by accountId")
-    public CreateAccountV3Dto getAccount(
+    public Mono<CreateAccountV3Dto> getAccount(
             @Parameter(description = "Account ID", required = true)
             @PathVariable UUID accountId
     ) {
@@ -45,7 +46,7 @@ public class OdapRiskController {
 
     @GetMapping("/accounts/{accountId}/analyses/{analysisId}/scores")
     @Operation(summary = "Get Risk Scores", description = "Retrieve risk scores for an analysis")
-    public LatestMonthAnalysisDataV3Dto getRiskScores(
+    public Mono<LatestMonthAnalysisDataV3Dto> getRiskScores(
             @Parameter(description = "Account ID", required = true)
             @PathVariable UUID accountId,
             @Parameter(description = "Analysis ID", required = true)
@@ -56,7 +57,7 @@ public class OdapRiskController {
 
     @GetMapping("/accounts/{accountId}/analyses/{analysisId}/report")
     @Operation(summary = "Download Report", description = "Get presigned URL for full report")
-    public AmAnalysisReportDto getFullReport(
+    public Mono<AmAnalysisReportDto> getFullReport(
             @Parameter(description = "Account ID", required = true)
             @PathVariable UUID accountId,
             @Parameter(description = "Analysis ID", required = true)
@@ -67,7 +68,7 @@ public class OdapRiskController {
 
     @GetMapping("/accounts/{accountId}/analyses/{analysisId}/signals")
     @Operation(summary = "Get Security Signals", description = "Retrieve filtered security signals")
-    public SecuritySignalsResponseDto getSecuritySignals(
+    public Mono<SecuritySignalsResponseDto> getSecuritySignals(
             @Parameter(description = "Account ID", required = true)
             @PathVariable UUID accountId,
             @Parameter(description = "Analysis ID", required = true)
@@ -86,7 +87,7 @@ public class OdapRiskController {
 
     @GetMapping("/accounts/{accountId}/analyses/{analysisId}/signals/history")
     @Operation(summary = "Get Historical Signals", description = "Retrieve historical signal trends")
-    public SecuritySignalsHistoricalResponse getHistoricalSignals(
+    public Mono<SecuritySignalsHistoricalResponse> getHistoricalSignals(
             @Parameter(description = "Account ID", required = true)
             @PathVariable UUID accountId,
             @Parameter(description = "Analysis ID", required = true)
@@ -101,7 +102,7 @@ public class OdapRiskController {
 
     @GetMapping("/companies/search")
     @Operation(summary = "Search Company", description = "Search companies by name or website")
-    public List<SearchCompanyDto> searchCompany(
+    public Mono<List<SearchCompanyDto>> searchCompany(
             @Parameter(description = "Search query", required = true)
             @RequestParam String query
     ) {

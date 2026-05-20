@@ -8,6 +8,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.support.RestClientAdapter;
+import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.support.WebClientAdapter;
 import org.springframework.web.service.invoker.HttpServiceProxyFactory;
 
 @Import(ApplicationConfig.class)
@@ -21,32 +23,44 @@ public class OdapApiClientConfig {
     private String apiKey;
 
     @Bean
-    public OdapApiFlClient odapApiClient(RestClient.Builder builder) {
+    public OdapApiFlClient odapApiClient(WebClient webClient) {
 
-        RestClient restClient = builder
+//        RestClient restClient = builder
+//                .baseUrl(formatBaseUrl())
+//                .defaultHeader("Accept", "application/json")
+//                .defaultHeader("x-api-key", apiKey)
+//                .build();
+
+        WebClient customWebClient = webClient.mutate()
                 .baseUrl(formatBaseUrl())
                 .defaultHeader("Accept", "application/json")
                 .defaultHeader("x-api-key", apiKey)
                 .build();
 
         HttpServiceProxyFactory factory = HttpServiceProxyFactory
-                .builderFor(RestClientAdapter.create(restClient))
+                .builderFor(WebClientAdapter.create(customWebClient))
                 .build();
 
         return factory.createClient(OdapApiFlClient.class);
     }
 
     @Bean
-    public OdapRiskApiClient odapApiRiskClient(RestClient.Builder builder) {
+    public OdapRiskApiClient odapApiRiskClient(WebClient webClient) {
 
-        RestClient restClient = builder
+//        RestClient restClient = builder
+//                .baseUrl(formatBaseUrl())
+//                .defaultHeader("Accept", "application/json")
+//                .defaultHeader("x-api-key", apiKey)
+//                .build();
+
+        WebClient customWebClient = webClient.mutate()
                 .baseUrl(formatBaseUrl())
                 .defaultHeader("Accept", "application/json")
                 .defaultHeader("x-api-key", apiKey)
                 .build();
 
         HttpServiceProxyFactory factory = HttpServiceProxyFactory
-                .builderFor(RestClientAdapter.create(restClient))
+                .builderFor(WebClientAdapter.create(customWebClient))
                 .build();
 
         return factory.createClient(OdapRiskApiClient.class);

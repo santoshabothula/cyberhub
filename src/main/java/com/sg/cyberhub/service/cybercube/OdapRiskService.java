@@ -4,8 +4,10 @@ import com.sg.cyberhub.client.cybercube.OdapRiskApiClient;
 import com.sg.cyberhub.model.cybercube.risk.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -15,26 +17,26 @@ public class OdapRiskService {
     private final OdapRiskApiClient client;
 
     public UUID createAccount(CreateAccountV3Dto request) {
-        return client.createCompanyV3(request).getAccountId();
+        return Objects.requireNonNull(client.createCompanyV3(request).block()).getAccountId();
     }
 
-    public CreateAccountV3Dto getAccount(UUID accountId) {
+    public Mono<CreateAccountV3Dto> getAccount(UUID accountId) {
         return client.getCompanyV3(accountId);
     }
 
     public UUID runAnalysis(UUID accountId) {
-        return client.runAnalysisLatest(accountId).getAnalysisId();
+        return Objects.requireNonNull(client.runAnalysisLatest(accountId).block()).getAnalysisId();
     }
 
-    public LatestMonthAnalysisDataV3Dto getRiskScores(UUID accountId, UUID analysisId) {
+    public Mono<LatestMonthAnalysisDataV3Dto> getRiskScores(UUID accountId, UUID analysisId) {
         return client.getRiskScoresV3(accountId, analysisId);
     }
 
-    public AmAnalysisReportDto getFullReport(UUID accountId, UUID analysisId) {
+    public Mono<AmAnalysisReportDto> getFullReport(UUID accountId, UUID analysisId) {
         return client.downloadReportLatest(accountId, analysisId);
     }
 
-    public SecuritySignalsResponseDto getSecuritySignals(
+    public Mono<SecuritySignalsResponseDto> getSecuritySignals(
             UUID accountId,
             UUID analysisId,
             String threatType,
@@ -45,7 +47,7 @@ public class OdapRiskService {
         return client.getSecuritySignals(accountId, analysisId, threatType, signalType, signalImpact, signalState);
     }
 
-    public SecuritySignalsHistoricalResponse getHistoricalSignals(
+    public Mono<SecuritySignalsHistoricalResponse> getHistoricalSignals(
             UUID accountId,
             UUID analysisId,
             String signalName,
@@ -54,7 +56,7 @@ public class OdapRiskService {
         return client.getHistoricalSignals(accountId, analysisId, signalName, months);
     }
 
-    public List<SearchCompanyDto> searchCompany(String query) {
+    public Mono<List<SearchCompanyDto>> searchCompany(String query) {
         return client.searchCompany(query);
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.service.annotation.*;
+import reactor.core.publisher.Mono;
 
 @HttpExchange(
         accept = "application/json",
@@ -16,13 +17,13 @@ public interface InsurersApiClient {
 
     // ============ Insurer Settings API ============
     @GetExchange("/settings")
-    InsurerSettingsSchema getInsurerSettings(
+    Mono<InsurerSettingsSchema> getInsurerSettings(
             @RequestParam(value = "agency", required = false) String agency
     );
 
     // ============ Insured API ============
     @GetExchange("/insureds")
-    InsuredsListSchema searchInsureds(
+    Mono<InsuredsListSchema> searchInsureds(
             @RequestParam(value = "limit", defaultValue = "100") int limit,
             @RequestParam(value = "skip", defaultValue = "0") int skip,
             @RequestParam(value = "assigned_id", required = false) String assignedId,
@@ -30,29 +31,29 @@ public interface InsurersApiClient {
     );
 
     @DeleteExchange("/insureds/{insured}")
-    InsuredsDeleteSchema deleteInsured(
+    Mono<InsuredsDeleteSchema> deleteInsured(
             @PathVariable String insured
     );
 
     @GetExchange("/insureds/{insured}")
-    InsuredReadSchema readInsured(
+    Mono<InsuredReadSchema> readInsured(
             @PathVariable String insured
     );
 
     @PutExchange("/insureds/{insured}")
-    InsuredsCreateSchema createInsured(
+    Mono<InsuredsCreateSchema> createInsured(
             @PathVariable String insured,
             @RequestBody InsuredSourceSchema request
     );
 
     @PostExchange("/insureds/{insured}/reprofile")
-    InsuredsReprofileSchema reProfileInsured(
+    Mono<InsuredsReprofileSchema> reProfileInsured(
             @PathVariable String insured
     );
 
     // ============ Aggregated Risk API ============
     @GetExchange("/aggregated-risk")
-    AggregatedRiskSchema getAggregatedRisk(
+    Mono<AggregatedRiskSchema> getAggregatedRisk(
             @RequestParam(value = "book", required = false) String book,
             @RequestParam(value = "agency", required = false) String agency,
             @RequestParam(value = "start_date", required = false) String startDate,
@@ -61,14 +62,14 @@ public interface InsurersApiClient {
 
     // ============ Reports API ============
     @GetExchange("/reports")
-    SnapshotsListSchema getReportSnapshots(
+    Mono<SnapshotsListSchema> getReportSnapshots(
             @RequestParam(value = "since", required = false) String since,
             @RequestParam(value = "limit", defaultValue = "100") int limit,
             @RequestParam(value = "skip", defaultValue = "0") int skip
     );
 
     @GetExchange("/reports/insureds/{insured}")
-    SnapshotsListSchema getReportSnapshotsByInsured(
+    Mono<SnapshotsListSchema> getReportSnapshotsByInsured(
             @PathVariable String insured,
             @RequestParam(value = "since", required = false) String since,
             @RequestParam(value = "limit", defaultValue = "100") int limit,
@@ -76,19 +77,19 @@ public interface InsurersApiClient {
     );
 
     @GetExchange("/reports/insureds/{insured}/{snapshot}")
-    SnapshotSchema getReportSnapshot(
+    Mono<SnapshotSchema> getReportSnapshot(
             @PathVariable String insured,
             @PathVariable String snapshot
     );
 
     @GetExchange("/reports/insureds/{insured}/{snapshot}/full-version")
-    SnapshotFullSchema getReportSnapshotFullVersion(
+    Mono<SnapshotFullSchema> getReportSnapshotFullVersion(
             @PathVariable String insured,
             @PathVariable String snapshot
     );
 
     @GetExchange("/reports/insureds/{insured}/{snapshot}/export-pdf")
-    Resource exportReportSnapshotPdf(
+    Mono<Resource> exportReportSnapshotPdf(
             @PathVariable String insured,
             @PathVariable String snapshot,
             @RequestHeader(value = "Accept", defaultValue = "application/pdf") String accept,
@@ -105,7 +106,7 @@ public interface InsurersApiClient {
     );
 
     @GetExchange("/reports/insureds/{insured}/{snapshot}/export-custom-pdf")
-    Resource exportReportSnapshotCustomPdf(
+    Mono<Resource> exportReportSnapshotCustomPdf(
             @PathVariable String insured,
             @PathVariable String snapshot,
             @RequestHeader(value = "Accept", defaultValue = "application/pdf") String accept

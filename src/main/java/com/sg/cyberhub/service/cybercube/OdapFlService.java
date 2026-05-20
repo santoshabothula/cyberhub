@@ -4,52 +4,45 @@ import com.sg.cyberhub.client.cybercube.OdapApiFlClient;
 import com.sg.cyberhub.model.cybercube.fl.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class OdapFlService implements OdapApiFlClient {
+public class OdapFlService {
 
     private OdapApiFlClient client;
 
-    @Override
-    public Account createAnAccount(Accountv3Request request) {
+    public Mono<Account> createAnAccount(Accountv3Request request) {
         return client.createAnAccount(request);
     }
 
-    @Override
-    public FinancialLossResults getCATFinancialLoss(String accountId, String analysisId) {
+    public Mono<FinancialLossResults> getCATFinancialLoss(String accountId, String analysisId) {
         return client.getCATFinancialLoss(accountId, analysisId);
     }
 
-    @Override
-    public FinancialLossResultsYlt getCATYLTPresignedURL(String accountId, String analysisId) {
+    public Mono<FinancialLossResultsYlt> getCATYLTPresignedURL(String accountId, String analysisId) {
         return client.getCATYLTPresignedURL(accountId, analysisId);
     }
 
-    @Override
-    public FinancialLossResults getFinancialLossByTypeRiskAdjustedBaseline(String accountId, String analysisId, String type) {
+    public Mono<FinancialLossResults> getFinancialLossByTypeRiskAdjustedBaseline(String accountId, String analysisId, String type) {
         return client.getFinancialLossByTypeRiskAdjustedBaseline(accountId, analysisId, type);
     }
 
-    @Override
-    public FinancialLossResultsYlt getYLTPresignedURLResultByTypeRFABASELINE(String accountId, String analysisId, String type) {
+    public Mono<FinancialLossResultsYlt> getYLTPresignedURLResultByTypeRFABASELINE(String accountId, String analysisId, String type) {
         return client.getYLTPresignedURLResultByTypeRFABASELINE(accountId, analysisId, type);
     }
 
-    @Override
-    public Accountv3Request retrieveAccountInformation(String accountId) {
+    public Mono<Accountv3Request> retrieveAccountInformation(String accountId) {
         return client.retrieveAccountInformation(accountId);
     }
 
-    @Override
-    public RunAnalysisResponse runAnalysis(String accountId) {
+    public Mono<RunAnalysisResponse> runAnalysis(String accountId) {
         return client.runAnalysis(accountId);
     }
 
-    @Override
-    public List<SearchCompanyDto> searchCompany(String query) {
+    public Mono<List<SearchCompanyDto>> searchCompany(String query) {
         return client.searchCompany(query);
     }
 }

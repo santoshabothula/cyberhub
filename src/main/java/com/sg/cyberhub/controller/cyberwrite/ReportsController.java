@@ -14,6 +14,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping("/api/v1/cyberwrite/reports")
@@ -26,7 +27,7 @@ public class ReportsController {
     @GetMapping
     @Operation(summary = "Get Report Snapshots", description = "Get all report snapshots for insurer")
     @ApiResponse(responseCode = "200", description = "Report snapshots retrieved successfully")
-    public ResponseEntity<SnapshotsListSchema> getReportSnapshots(
+    public ResponseEntity<Mono<SnapshotsListSchema>> getReportSnapshots(
             @Parameter(description = "Get snapshots since date")
             @RequestParam(value = "since", required = false) String since,
             @Parameter(description = "Number of items per page")
@@ -34,14 +35,13 @@ public class ReportsController {
             @Parameter(description = "Number of items to skip")
             @RequestParam(value = "skip", defaultValue = "0") int skip
     ) {
-        SnapshotsListSchema result = insurersService.getReportSnapshots(since, limit, skip);
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok(insurersService.getReportSnapshots(since, limit, skip));
     }
 
     @GetMapping("/insureds/{insured}")
     @Operation(summary = "Get Report Snapshots by Insured", description = "Get report snapshots for specific insured")
     @ApiResponse(responseCode = "200", description = "Insured report snapshots retrieved successfully")
-    public ResponseEntity<SnapshotsListSchema> getReportSnapshotsByInsured(
+    public ResponseEntity<Mono<SnapshotsListSchema>> getReportSnapshotsByInsured(
             @Parameter(description = "Insured UUID")
             @PathVariable String insured,
             @Parameter(description = "Get snapshots since date")
@@ -51,40 +51,37 @@ public class ReportsController {
             @Parameter(description = "Number of items to skip")
             @RequestParam(value = "skip", defaultValue = "0") int skip
     ) {
-        SnapshotsListSchema result = insurersService.getReportSnapshotsByInsured(insured, since, limit, skip);
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok(insurersService.getReportSnapshotsByInsured(insured, since, limit, skip));
     }
 
     @GetMapping("/insureds/{insured}/{snapshot}")
     @Operation(summary = "Get Report Snapshot", description = "Get specific report snapshot")
     @ApiResponse(responseCode = "200", description = "Report snapshot retrieved successfully")
-    public ResponseEntity<SnapshotSchema> getReportSnapshot(
+    public ResponseEntity<Mono<SnapshotSchema>> getReportSnapshot(
             @Parameter(description = "Insured UUID")
             @PathVariable String insured,
             @Parameter(description = "Snapshot ID or 'last'")
             @PathVariable String snapshot
     ) {
-        SnapshotSchema result = insurersService.getReportSnapshot(insured, snapshot);
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok(insurersService.getReportSnapshot(insured, snapshot));
     }
 
     @GetMapping("/insureds/{insured}/{snapshot}/full-version")
     @Operation(summary = "Get Full Report Snapshot", description = "Get full report snapshot with recommendations")
     @ApiResponse(responseCode = "200", description = "Full report snapshot retrieved successfully")
-    public ResponseEntity<SnapshotFullSchema> getReportSnapshotFullVersion(
+    public ResponseEntity<Mono<SnapshotFullSchema>> getReportSnapshotFullVersion(
             @Parameter(description = "Insured UUID")
             @PathVariable String insured,
             @Parameter(description = "Snapshot ID or 'last'")
             @PathVariable String snapshot
     ) {
-        SnapshotFullSchema result = insurersService.getReportSnapshotFullVersion(insured, snapshot);
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok(insurersService.getReportSnapshotFullVersion(insured, snapshot));
     }
 
     @GetMapping("/insureds/{insured}/{snapshot}/export-pdf")
     @Operation(summary = "Export Report Snapshot PDF", description = "Export report snapshot as PDF with customizable options")
     @ApiResponse(responseCode = "200", description = "PDF exported successfully", content = @Content(mediaType = "application/pdf"))
-    public ResponseEntity<Resource> exportReportSnapshotPdf(
+    public ResponseEntity<Mono<Resource>> exportReportSnapshotPdf(
             @Parameter(description = "Insured UUID")
             @PathVariable String insured,
             @Parameter(description = "Snapshot ID or 'last'")
@@ -111,25 +108,23 @@ public class ReportsController {
             @Parameter(description = "Currency of the report")
             @RequestParam(value = "currency", required = false) String currency
     ) {
-        Resource result = insurersService.exportReportSnapshotPdf(insured, snapshot, accept, showUnderwritingScreen, showDataScreen, showRecommendationsScreen, showRegulatoryFrameworks, showCoverageDescriptionScreen, showRiskReportExplanationScreen, showSecurityQuestionnaireScreen, showRiskReportSummaryCustomScreen, lang, currency);
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_PDF)
-                .body(result);
+                .body(insurersService.exportReportSnapshotPdf(insured, snapshot, accept, showUnderwritingScreen, showDataScreen, showRecommendationsScreen, showRegulatoryFrameworks, showCoverageDescriptionScreen, showRiskReportExplanationScreen, showSecurityQuestionnaireScreen, showRiskReportSummaryCustomScreen, lang, currency));
     }
 
     @GetMapping("/insureds/{insured}/{snapshot}/export-custom-pdf")
     @Operation(summary = "Export Custom PDF", description = "Export custom PDF for report snapshot")
     @ApiResponse(responseCode = "200", description = "Custom PDF exported successfully", content = @Content(mediaType = "application/pdf"))
-    public ResponseEntity<Resource> exportReportSnapshotCustomPdf(
+    public ResponseEntity<Mono<Resource>> exportReportSnapshotCustomPdf(
             @Parameter(description = "Insured UUID")
             @PathVariable String insured,
             @Parameter(description = "Snapshot ID or 'last'")
             @PathVariable String snapshot,
             @RequestHeader(value = "Accept", defaultValue = "application/pdf") String accept
     ) {
-        Resource result = insurersService.exportReportSnapshotCustomPdf(insured, snapshot, accept);
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_PDF)
-                .body(result);
+                .body(insurersService.exportReportSnapshotCustomPdf(insured, snapshot, accept));
     }
 }
