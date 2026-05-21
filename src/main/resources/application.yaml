@@ -1,15 +1,18 @@
 spring:
   application:
     name: sov-cyberhub
-#  datasource:
-#    url: jdbc:sqlite:cyber_hub_logs.db
-#    driver-class-name: org.sqlite.JDBC
-#  jpa:
-#    database-platform: org.hibernate.community.dialect.SQLiteDialect
-#    hibernate.ddl-auto: update
-#    show-sql: false
-#  jackson:
-#    property-naming-strategy: SNAKE_CASE
+  datasource:
+    url: jdbc:sqlite:${SQLITE_DB_PATH:}cyber_hub_logs.db
+    driver-class-name: org.sqlite.JDBC
+  jpa:
+    database-platform: org.hibernate.community.dialect.SQLiteDialect
+    hibernate.ddl-auto: update
+    show-sql: false
+
+app:
+  logging:
+    request-enabled: true
+    response-enabled: true
 
 logging:
   pattern:
