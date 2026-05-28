@@ -1,8 +1,7 @@
 package com.sg.cyberhub.config;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import org.apache.hc.client5.http.config.ConnectionConfig;
@@ -20,6 +19,12 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestClient;
 
+import java.io.IOException;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.temporal.ChronoField;
+
 @Configuration
 public class ApplicationConfig {
 
@@ -27,7 +32,30 @@ public class ApplicationConfig {
     public ObjectMapper objectMapper() {
         ObjectMapper mapper = new ObjectMapper();
 //        mapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
-        mapper.registerModule(new JavaTimeModule());
+        JavaTimeModule module = new JavaTimeModule();
+        module.addDeserializer(OffsetDateTime.class, new JsonDeserializer<>() {
+            private final DateTimeFormatter formatter = new DateTimeFormatterBuilder()
+                    .appendValue(ChronoField.YEAR, 4)
+                    .appendLiteral('-')
+                    .appendValue(ChronoField.MONTH_OF_YEAR)
+                    .appendLiteral('-')
+                    .appendValue(ChronoField.DAY_OF_MONTH)
+                    .appendLiteral('T')
+                    .appendPattern("HH:mm:ss")
+                    .appendOffset("+HH:MM", "Z")
+                    .toFormatter();
+
+            @Override
+            public OffsetDateTime deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+                String value = p.getText();
+                try {
+                    return OffsetDateTime.parse(value);
+                } catch (Exception ex) {
+                    return OffsetDateTime.parse(value, formatter);
+                }
+            }
+        });
+        mapper.registerModule(module);
         mapper.registerModule(new ParameterNamesModule());
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         mapper.enable(DeserializationFeature.USE_LONG_FOR_INTS);
